@@ -1,19 +1,25 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"net"
-	"os"
 )
 
 func main() {
-	conn, err := net.Dial("tcp", "localhost:2489")
+	var port int
+	var host string
+	flag.IntVar(&port, "port", 2489, "TCP port number")
+	flag.StringVar(&host, "host", "localhost", "Remote hostname")
+	flag.Parse()
+
+	conn, err := net.Dial("tcp", fmt.Sprintf("%s:%d", host, port))
 	if err != nil {
 		panic(err)
 	}
 	defer conn.Close()
-	fmt.Fprintf(conn, os.Args[1])
+	fmt.Fprintf(conn, flag.Arg(0))
 	conn.Write([]byte{'\000'})
 	body, err := ioutil.ReadAll(conn)
 	if err != nil {

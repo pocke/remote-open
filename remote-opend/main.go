@@ -2,6 +2,8 @@ package main
 
 import (
 	"bufio"
+	"flag"
+	"fmt"
 	"log"
 	"net"
 
@@ -9,7 +11,13 @@ import (
 )
 
 func main() {
-	l, err := net.Listen("tcp", "localhost:2489")
+	var port int
+	var host string
+	flag.IntVar(&port, "port", 2489, "TCP port number")
+	flag.StringVar(&host, "host", "localhost", "Remote hostname")
+	flag.Parse()
+
+	l, err := net.Listen("tcp", fmt.Sprintf("%s:%d", host, port))
 	if err != nil {
 		panic(err)
 	}
@@ -28,13 +36,13 @@ func handle(conn net.Conn) {
 	defer conn.Close()
 	log.Printf("Request from %s", conn.RemoteAddr())
 	line, err := bufio.NewReader(conn).ReadString('\000')
-	body := line[:len(line)-1]
 
 	if err != nil {
 		log.Println(err)
 		conn.Write([]byte(err.Error()))
 		return
 	}
+	body := line[:len(line)-1]
 
 	err = open.Run(string(body))
 	if err != nil {
