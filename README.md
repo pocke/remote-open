@@ -11,6 +11,8 @@ Installation
 go get github.com/pocke/remote-open/...
 ```
 
+Or download from https://github.com/pocke/remote-open/releases/latest.
+
 Usage
 ------
 
