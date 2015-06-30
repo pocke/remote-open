@@ -44,7 +44,11 @@ Configuration
 
 ```toml
 port = 1234
+allow = '192.168.0.0/24'
 ```
+
+`allow` is a comma separated list of allowed IP(and subnet mask) or an allowed IP.  
+Default value is `0.0.0.0/0,::0`(allowed from all IP).
 
 ### Client
 
