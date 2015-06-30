@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net"
+
+	"github.com/mitchellh/go-homedir"
+	"github.com/monochromegane/conflag"
 )
 
 func main() {
@@ -12,6 +15,15 @@ func main() {
 	var host string
 	flag.IntVar(&port, "port", 2489, "TCP port number")
 	flag.StringVar(&host, "host", "localhost", "Remote hostname")
+
+	confPath, err := homedir.Expand("~/.config/remote-open.toml")
+	if err != nil {
+		panic(err)
+	}
+	if args, err := conflag.ArgsFrom(confPath); err == nil {
+		flag.CommandLine.Parse(args)
+	}
+
 	flag.Parse()
 
 	conn, err := net.Dial("tcp", fmt.Sprintf("%s:%d", host, port))
