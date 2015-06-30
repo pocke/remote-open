@@ -12,12 +12,10 @@ import (
 
 func main() {
 	var port int
-	var host string
 	flag.IntVar(&port, "port", 2489, "TCP port number")
-	flag.StringVar(&host, "host", "localhost", "Remote hostname")
 	flag.Parse()
 
-	l, err := net.Listen("tcp", fmt.Sprintf("%s:%d", host, port))
+	l, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
 	if err != nil {
 		panic(err)
 	}
